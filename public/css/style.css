@@ -1,0 +1,6 @@
+.panel-content:hover .panel-actions {
+    display: block;
+}
+.panel-actions {
+    left:25% !important;
+}
