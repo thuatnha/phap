@@ -20,6 +20,7 @@
                                         <div class="panel-actions" style="display: block;">
                                             <form action="{{route('history.action')}}" METHOD="POST">
                                                 {{ csrf_field() }}
+                                                @include('listuser')
                                                 <input type="hidden" name="full_path" value="{{$file['full_path']}}">
                                                 <input type="hidden" name="file_name" value="{{$file['file_name']}}">
                                                 <button class="btn btn-primary" name="type" type="submit" value="move">Di Chuyển</button>

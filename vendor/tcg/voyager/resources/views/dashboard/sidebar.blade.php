@@ -29,7 +29,6 @@
             </div>
 
         </div>
-
         {!! menu('admin', 'admin_menu') !!}
     </nav>
 </div>

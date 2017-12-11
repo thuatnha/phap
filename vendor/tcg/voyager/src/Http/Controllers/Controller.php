@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -94,6 +95,18 @@ abstract class Controller extends BaseController
                 }
             }
 
+            if($row->field == 'email') {
+                $folder_images = Config::get('web.folder_train').'/'.$content;
+                $folder_videos = Config::get('web.folder_train_videos').'/'.$content;
+                if(!Storage::disk('public')->exists($folder_images))
+                {
+                    Storage::disk('public')->makeDirectory($folder_images);
+                }
+                if(!Storage::disk('public')->exists($folder_videos)){
+                    Storage::disk('public')->makeDirectory($folder_videos);
+                }
+            }
+
             if ($row->type == 'relationship' && $options->type == 'belongsToMany') {
                 // Only if select_multiple is working with a relationship
                 $multi_select[] = ['model' => $options->model, 'content' => $content, 'table' => $options->pivot_table];
@@ -101,6 +114,7 @@ abstract class Controller extends BaseController
                 $data->{$row->field} = $content;
             }
         }
+
 
         $data->save();
 

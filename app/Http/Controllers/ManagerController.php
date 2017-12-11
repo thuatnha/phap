@@ -22,6 +22,7 @@ class ManagerController extends Controller
         $directory = Config::get('web.history');
         $files = Storage::disk('public')->files($directory);
         $data = [];
+        $data['list_user'] = User::all();
         if (!empty($files)) {
             foreach ($files as $file) {
                 $data['list_file'][] = Convert::convert_file_to_array($file);
@@ -57,7 +58,8 @@ class ManagerController extends Controller
         $action = $request->input('type');
         $full_path = $request->input('full_path');
         $file_name = $request->input('file_name');
-        $folder_to = Config::get('web.folder_train');
+        $user = $request->input('user');
+        $folder_to = Config::get('web.folder_train').'/'.$user;
         $file_source = '';
         if (empty($action)) {
             return;
@@ -83,7 +85,7 @@ class ManagerController extends Controller
             return;
         }
         if ($action == 'move') {
-            Storage::disk('public')->move($full_path, $folder_to . '/'. $user .'_'. $file_name);
+            Storage::disk('public')->move($full_path, $folder_to . '/' . $user . '/' . $file_name);
             return redirect()->route('unknown');
 
         } else {
