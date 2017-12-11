@@ -22,5 +22,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::match(['get', 'post'], '/lich-su-nhan-dien/action', ['as' => 'history.action', 'uses' => 'ManagerController@history_action']);
     Route::match(['get', 'post'], '/khong-nhan-dien', ['as' => 'unknown', 'uses' => 'ManagerController@unknown']);
     Route::match(['get', 'post'], '/khong-nhan-dien/action', ['as' => 'unknown.action', 'uses' => 'ManagerController@unknown_action']);
+    Route::match(['get', 'post'], '/camera', ['as' => 'camera', 'uses' => 'ManagerController@camera']);
 
 });

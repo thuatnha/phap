@@ -53,6 +53,25 @@ class ManagerController extends Controller
         return view('unknown', $data);
     }
 
+    public function camera(Request $request)
+    {
+        echo "Hello Camera";
+//        $directory = Config::get('web.unknown');
+//        $files = Storage::disk('public')->files($directory);
+//        $data = [];
+//        $data['list_user'] = User::all();
+//        if (!empty($files)) {
+//            foreach ($files as $file) {
+//                $data['list_file'][] = Convert::convert_file_to_array($file);
+//            }
+//
+//        } else {
+//
+//        }
+////        dd($data['list_file']);
+//        return view('unknown', $data);
+    }
+
     public function history_action(Request $request)
     {
         $action = $request->input('type');
