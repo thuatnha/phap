@@ -17,7 +17,7 @@
                             <div class="col-xs-12 col-sm-4 col-md-3">
                                 <div class="panel">
                                     <div class="panel-content text-center" style="overflow: hidden;background-size: cover;background-position: center center;position: relative;margin-bottom:0;height: 250px;background-image:url('{{ \Illuminate\Support\Facades\Storage::disk('public')->url($file['full_path']) }}')">
-                                        <div class="panel-actions" style="display: block;">
+                                        <div class="panel-actions">
                                             <form action="{{route('history.action')}}" METHOD="POST">
                                                 {{ csrf_field() }}
                                                 @include('listuser')

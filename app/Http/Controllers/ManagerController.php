@@ -55,7 +55,7 @@ class ManagerController extends Controller
 
     public function camera(Request $request)
     {
-        echo "Hello Camera";
+        echo "Hello Camera Phap Truong";
 //        $directory = Config::get('web.unknown');
 //        $files = Storage::disk('public')->files($directory);
 //        $data = [];

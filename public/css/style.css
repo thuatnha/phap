@@ -3,4 +3,5 @@
 }
 .panel-actions {
     left:25% !important;
+    display: none;
 }
