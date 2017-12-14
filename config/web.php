@@ -9,5 +9,6 @@ return [
     "history" => "Data/Images/History",
     "unknown" => "Data/Images/Unknown",
     "folder_train" => "Data/TrainData/TrainImages",
-    "folder_train_videos" => "Data/TrainData/Videos"
+    "folder_train_videos" => "Data/TrainData/Videos",
+    "paging"=> 3
 ];

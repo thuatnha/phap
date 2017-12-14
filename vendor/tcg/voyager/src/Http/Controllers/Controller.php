@@ -107,6 +107,19 @@ abstract class Controller extends BaseController
                 }
             }
 
+            if($row->field == 'video'){
+                if(isset($folder_videos)){
+                    $file = $request->file($row->field)[0];
+                    $file->storeAs(
+                        $folder_videos,
+                        $file->getClientOriginalName(),
+                        config('voyager.storage.disk', 'public')
+                    );
+                    $content = $folder_videos .'/'. $file->getClientOriginalName();
+
+                }
+            }
+
             if ($row->type == 'relationship' && $options->type == 'belongsToMany') {
                 // Only if select_multiple is working with a relationship
                 $multi_select[] = ['model' => $options->model, 'content' => $content, 'table' => $options->pivot_table];
@@ -186,6 +199,10 @@ abstract class Controller extends BaseController
 
             /********** FILE TYPE **********/
             case 'file':
+                if($row->field == 'video'){
+                   return;
+                }
+
                 if ($files = $request->file($row->field)) {
                     if (!is_array($files)) {
                         $files = [$files];

@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/get_users', ['as' => 'get_users', 'uses' => 'UsersController@get_users']);
+Route::match(['get', 'post'],'/insert_history', ['as' => 'insert_history', 'uses' => 'ManagerController@insert_history']);
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
@@ -23,5 +25,4 @@ Route::group(['prefix' => 'admin'], function () {
     Route::match(['get', 'post'], '/khong-nhan-dien', ['as' => 'unknown', 'uses' => 'ManagerController@unknown']);
     Route::match(['get', 'post'], '/khong-nhan-dien/action', ['as' => 'unknown.action', 'uses' => 'ManagerController@unknown_action']);
     Route::match(['get', 'post'], '/camera', ['as' => 'camera', 'uses' => 'ManagerController@camera']);
-
 });

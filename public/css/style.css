@@ -2,5 +2,13 @@
     display: block;
 }
 .panel-actions {
-    left:25% !important;
+    /*left:25% !important;*/
+}
+.panel-actions {
+    position: relative;
+    width: 50%;
+    margin: 0 auto;
+    display: none;
+    right: 0px;
+    left: 0px;
 }
