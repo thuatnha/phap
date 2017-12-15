@@ -11,7 +11,18 @@
                     <h3><i class="voyager-images"></i> Lịch sử nhận diện</h3>
                 </div>
                 <div class="clear"></div>
-
+                <div class="clearfix container-fluid row">
+                    <div class="col-xs-12">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <input type="text" name="email" class="form-control" placeholder="User Name">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="email" class="form-control" placeholder="User Name">
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <div id="filemanager">
                     <div class="clearfix container-fluid row">
                         @foreach ($list_file->items() as $file)
@@ -24,6 +35,7 @@
                                                 @include('listuser')
                                                 <input type="hidden" name="full_path" value="{{$file['full_path']}}">
                                                 <input type="hidden" name="file_name" value="{{$file['file_name']}}">
+                                                <input type="hidden" name="id" value="{{$file['id']}}">
                                                 <div class="form-inline form-group" style="margin-top: -15px;">
                                                     <button class="btn btn-primary" name="type" type="submit" value="move">Di Chuyển</button>
                                                     <button class="btn btn-warning" name="type" type="submit" value="delete">Xóa</button>

@@ -24,6 +24,7 @@
                                                 @include('listuser')
                                                 <input type="hidden" name="full_path" value="{{$file['full_path']}}">
                                                 <input type="hidden" name="file_name" value="{{$file['file_name']}}">
+                                                <input type="hidden" name="id" value="{{$file['id']}}">
                                                 <div class="form-inline form-group" style="margin-top: -15px;">
                                                     <button class="btn btn-primary form-control" name="type" type="submit" value="move">Di Chuyển</button>
                                                     <button class="btn btn-warning form-control" name="type" type="submit" value="delete">Xóa</button>

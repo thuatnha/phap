@@ -15,6 +15,7 @@ use App\User;
 use App\Utils\Convert;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 
 class ManagerController extends Controller
@@ -39,7 +40,7 @@ class ManagerController extends Controller
         $time = $request->get('time');
         $list_file = FaceUser::paginate(Config::get('web.paging'));
         $list_user = User::all();
-        return view('history', compact('list_file','list_user'));
+        return view('history', compact('list_file', 'list_user'));
     }
 
     public function unknown(Request $request)
@@ -62,7 +63,7 @@ class ManagerController extends Controller
         $time = $request->get('time');
         $list_file = UnknownFace::paginate(Config::get('web.paging'));
         $list_user = User::all();
-        return view('unknown', compact('list_file','list_user'));
+        return view('unknown', compact('list_file', 'list_user'));
     }
 
     public function camera(Request $request)
@@ -87,21 +88,37 @@ class ManagerController extends Controller
     public function history_action(Request $request)
     {
         $action = $request->input('type');
-        $full_path = $request->input('full_path');
-        $file_name = $request->input('file_name');
+        $id = $request->input('id');
         $user = $request->input('user');
-        $folder_to = Config::get('web.folder_train').'/'.$user;
+        $flight = FaceUser::find($id);
+
+        if (!empty($flight) && !empty($user)) {
+            $full_path = $flight->full_path;
+            $file_name = $flight->file_name;
+        } else {
+            $message = 'Không có dữ liệu';
+            return Redirect::back()->with('message', $message);
+        }
+
+        $folder_to = Config::get('web.folder_train') . '/' . $user;
         $file_source = '';
+
         if (empty($action)) {
-            return;
+            $message = 'Chưa chọn thao tác';
+            return Redirect::back()->with('message', $message);
         }
         if ($action == 'move') {
             Storage::disk('public')->move($full_path, $folder_to . '/' . $file_name);
-            return redirect()->route('history');
+
+            $message = 'Di chuyển thành công';
+            return redirect()->route('history')->with('message', $message);
 
         } else {
+
+            $flight->delete();
             Storage::disk('public')->delete($full_path);
-            return redirect()->route('history');
+            $message = 'Xóa thành công';
+            return redirect()->route('history')->with('message', $message);
         }
     }
 
@@ -109,46 +126,67 @@ class ManagerController extends Controller
     {
         $user = $request->input('user');
         $action = $request->input('type');
-        $full_path = $request->input('full_path');
-        $file_name = $request->input('file_name');
         $folder_to = Config::get('web.folder_train');
+        $id = $request->input('id');
+        $flight = UnknownFace::find($id);
+
+        if (!empty($flight)) {
+            $full_path = $flight->full_path;
+            $file_name = $flight->file_name;
+        } else {
+            $message = 'Không có dữ liệu';
+            return Redirect::back()->with('message', $message);
+        }
+
         if (empty($action) || empty($user)) {
+            $message = 'Chưa chọn thao tác hoặc không chọn nhân viên';
+            return Redirect::back()->with('message', $message);
             return;
         }
+
         if ($action == 'move') {
+            $flight->delete();
             Storage::disk('public')->move($full_path, $folder_to . '/' . $user . '/' . $file_name);
-            return redirect()->route('unknown');
+            $message = 'Di chuyển thành công';
+            return redirect()->route('unknown')->with('message', $message);
 
         } else {
+            $flight->delete();
             Storage::disk('public')->delete($full_path);
-            return redirect()->route('unknown');
+            $message = 'Xóa thành công';
+            return redirect()->route('unknown')->with('message', $message);
         }
     }
 
-    public function insert_history(Request $request){
-        if($request->isMethod('post')) {
-            $file_name =  $request->input('file');
+    public function insert_history(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $file_name = $request->input('file');
             $is_success = $request->input('is_success');
-            $user_name =  $request->input('user_name');
+            $user_name = $request->input('user_name');
 
-            if($is_success){
+            if ($is_success) {
                 $face_user = new FaceUser();
                 $face_user->user_name = $user_name;
-                $face_user->full_path = Config::get('web.history'). '/'. $file_name;
+                $face_user->full_path = Config::get('web.history') . '/' . $file_name;
                 $face_user->file_name = $file_name;
                 $face_user->save();
-            }else {
+            } else {
                 $unknown_face = new UnknownFace();
-                $unknown_face->full_path = Config::get('web.unknown'). '/'. $file_name;
+                $unknown_face->full_path = Config::get('web.unknown') . '/' . $file_name;
                 $unknown_face->file_name = $file_name;
                 $unknown_face->save();
             }
             return $this->output($this->body);
 
-        }else {
+        } else {
             return $this->error(9997);
         }
 
     }
 
+    public function leave()
+    {
+        echo "Chấm CMNR Công";
+    }
 }
