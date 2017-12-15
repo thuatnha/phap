@@ -15,10 +15,13 @@
                     <div class="col-xs-12">
                         <form class="form-inline">
                             <div class="form-group">
-                                <input type="text" name="email" class="form-control" placeholder="User Name">
+                                <input type="text" name="user_name" class="form-control" value="@if(!empty($parame['user_name'])) {{$parame['user_name']}} @endif" placeholder="User Name">
                             </div>
                             <div class="form-group">
-                                <input type="text" name="email" class="form-control" placeholder="User Name">
+                                <input type="text" name="daterange" class="form-control" value="@if(!empty($parame['daterange'])) {{$parame['daterange']}} @endif" placeholder="Ngày Tháng">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-default">Tìm Kiếm</button>
                             </div>
                         </form>
                     </div>
@@ -53,7 +56,7 @@
                     </div>
                     <div class="clearfix container-fluid row">
                         <div class="col-md-12">
-                            {{$list_file->links()}}
+                            {{$list_file->links('vendor.pagination.default', ['parame'=> $parame])}}
                         </div>
                     </div>
                 </div>
@@ -64,3 +67,28 @@
 
     </style>
 @stop
+@section('javascript')
+<script type="text/javascript">
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            opens: "right",
+            alwaysShowCalendars: true,
+            autoUpdateInput: false,
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        });
+        $('input[name="daterange"]').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
+    });
+</script>
+    @endsection

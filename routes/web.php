@@ -25,5 +25,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::match(['get', 'post'], '/khong-nhan-dien', ['as' => 'unknown', 'uses' => 'ManagerController@unknown']);
     Route::match(['get', 'post'], '/khong-nhan-dien/action', ['as' => 'unknown.action', 'uses' => 'ManagerController@unknown_action']);
     Route::match(['get', 'post'], '/camera', ['as' => 'camera', 'uses' => 'ManagerController@camera']);
-    Route::match(['get', 'post'], '/cham-cong', ['as' => 'camera', 'uses' => 'ManagerController@leave']);
+    Route::match(['get', 'post'], '/camera/{id}', ['as' => 'camera_detail', 'uses' => 'ManagerController@camera_detail']);
+    Route::match(['get', 'post'], '/cham-cong', ['as' => 'chamcong', 'uses' => 'ManagerController@leave']);
+    Route::match(['get', 'post'], '/huan-luyen-lai', ['as' => 'retrain', 'uses' => 'ManagerController@retrain']);
+    Route::get('/camera-train', ['as' => 'camera_train', 'uses' => 'ManagerController@camera_train']);
 });

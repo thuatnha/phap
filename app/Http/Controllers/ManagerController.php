@@ -10,9 +10,11 @@ namespace App\Http\Controllers;
 
 
 use App\FaceUser;
+use App\ListCamera;
 use App\UnknownFace;
 use App\User;
 use App\Utils\Convert;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
@@ -36,11 +38,33 @@ class ManagerController extends Controller
 //
 //        }
         $data = [];
+        $parame = [];
         $page = $request->get('page', 1);
         $time = $request->get('time');
-        $list_file = FaceUser::paginate(Config::get('web.paging'));
+        $user_name = $request->get('user_name');
+        $date_range = $request->get('daterange');
         $list_user = User::all();
-        return view('history', compact('list_file', 'list_user'));
+        $face_user = FaceUser::query();
+//        if(empty($date_range) && empty($user_name)){
+//            $list_file = $face_user->paginate(Config::get('web.paging'));
+//        }
+        if ($user_name) {
+            $parame['user_name'] = $user_name;
+            $face_user->where('user_name', $user_name);
+        }
+        if ($date_range) {
+            $parame['daterange'] = $date_range;
+            if (preg_match('/-/', $date_range)) {
+                $date_time = explode('-', $date_range);
+                $date_time_from = Carbon::createFromFormat('d/m/Y', trim($date_time[0]))->format('Y-m-d') . ' 00:00:00';
+                $date_time_to = Carbon::createFromFormat('d/m/Y', trim($date_time[1]))->format('Y-m-d') . ' 23:59:59';
+                $face_user->where('updated_at', '>=', $date_time_from);
+                $face_user->where('updated_at', '<=', $date_time_to);
+            }
+        }
+        $list_file = $face_user->paginate(Config::get('web.paging'));
+
+        return view('history', compact('list_file', 'list_user', 'parame'));
     }
 
     public function unknown(Request $request)
@@ -68,21 +92,15 @@ class ManagerController extends Controller
 
     public function camera(Request $request)
     {
-        echo "Hello Camera Phap Truong";
-//        $directory = Config::get('web.unknown');
-//        $files = Storage::disk('public')->files($directory);
-//        $data = [];
-//        $data['list_user'] = User::all();
-//        if (!empty($files)) {
-//            foreach ($files as $file) {
-//                $data['list_file'][] = Convert::convert_file_to_array($file);
-//            }
-//
-//        } else {
-//
-//        }
-////        dd($data['list_file']);
-//        return view('unknown', $data);
+        $list_camera = ListCamera::all();
+
+        return view('listcamera', compact('list_camera'));
+    }
+
+    public function camera_detail(Request $request, $id = null)
+    {
+        $camera = ListCamera::find($id);
+        return view('camera', compact('camera'));
     }
 
     public function history_action(Request $request)
@@ -92,7 +110,7 @@ class ManagerController extends Controller
         $user = $request->input('user');
         $flight = FaceUser::find($id);
 
-        if (!empty($flight) && !empty($user)) {
+        if (!empty($flight)) {
             $full_path = $flight->full_path;
             $file_name = $flight->file_name;
         } else {
@@ -103,18 +121,17 @@ class ManagerController extends Controller
         $folder_to = Config::get('web.folder_train') . '/' . $user;
         $file_source = '';
 
-        if (empty($action)) {
-            $message = 'Chưa chọn thao tác';
+        if (empty($action) || empty($user)) {
+            $message = 'Chưa chọn thao tác hoặc chưa chọn nhân viên';
             return Redirect::back()->with('message', $message);
         }
         if ($action == 'move') {
             Storage::disk('public')->move($full_path, $folder_to . '/' . $file_name);
-
+            $flight->delete();
             $message = 'Di chuyển thành công';
             return redirect()->route('history')->with('message', $message);
 
         } else {
-
             $flight->delete();
             Storage::disk('public')->delete($full_path);
             $message = 'Xóa thành công';
@@ -139,7 +156,7 @@ class ManagerController extends Controller
         }
 
         if (empty($action) || empty($user)) {
-            $message = 'Chưa chọn thao tác hoặc không chọn nhân viên';
+            $message = 'Chưa chọn thao tác hoặc chưa chọn nhân viên';
             return Redirect::back()->with('message', $message);
             return;
         }
@@ -166,12 +183,15 @@ class ManagerController extends Controller
             $user_name = $request->input('user_name');
 
             if ($is_success) {
+
                 $face_user = new FaceUser();
                 $face_user->user_name = $user_name;
                 $face_user->full_path = Config::get('web.history') . '/' . $file_name;
                 $face_user->file_name = $file_name;
                 $face_user->save();
+
             } else {
+
                 $unknown_face = new UnknownFace();
                 $unknown_face->full_path = Config::get('web.unknown') . '/' . $file_name;
                 $unknown_face->file_name = $file_name;
@@ -187,6 +207,24 @@ class ManagerController extends Controller
 
     public function leave()
     {
-        echo "Chấm CMNR Công";
+
     }
+
+    public function retrain(Request $request)
+    {
+        $in_process = false;
+        if ($request->isMethod('post')) {
+            $in_process = true;
+            // login run commandasdasd
+
+        }
+        return view('retrain', compact('in_process'));
+    }
+
+    public function camera_train(Request $request)
+    {
+        $face_user = FaceUser::orderBy('id','dec')->take(2)->get();
+        echo json_encode($face_user);
+    }
+
 }

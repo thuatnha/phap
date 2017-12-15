@@ -29,6 +29,18 @@
             </div>
 
         </div>
-        {!! menu('admin', 'admin_menu') !!}
+        {{--{!! menu('admin', 'admin_menu') !!}--}}
+        <?php
+//            $user = \TCG\Voyager\Models\User::find(Auth::user()->id)->with;
+            $user = \TCG\Voyager\Models\User::find(Auth::user()->id);
+            $role_id = $user->role_id;
+            $role = \TCG\Voyager\Models\Role::find($role_id);
+            $role_name = $role->name;
+        ?>
+        @if($user->hasRole('admin'))
+            {!! menu('admin', 'admin_menu') !!}
+        @elseif($user->hasRole($role_name))
+            {!! menu('super', 'admin_menu') !!}
+        @endif
     </nav>
 </div>
