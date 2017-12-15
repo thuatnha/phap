@@ -15,7 +15,7 @@
                     <div id="filemanager">
                         <div class="clearfix container-fluid row">
                             <div class="col-md-5">
-                                <img src="{{\Illuminate\Support\Facades\Config::get('web.camera_link').$camera['link']}}">
+                                <img src="{{$camera['link_camera']}}">
                             </div>
                             <div class="col-md-7">
                                 <table class="table table-hover" id="table-camera">
