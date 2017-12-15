@@ -10,5 +10,5 @@ return [
     "unknown" => "Data/Images/Unknown",
     "folder_train" => "Data/TrainData/TrainImages",
     "folder_train_videos" => "Data/TrainData/Videos",
-    "paging"=> 3
+    "paging"=> 3,
 ];

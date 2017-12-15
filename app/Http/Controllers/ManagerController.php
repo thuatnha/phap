@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\Exception;
 
 class ManagerController extends Controller
 {
@@ -179,10 +180,10 @@ class ManagerController extends Controller
     {
         if ($request->isMethod('post')) {
             $file_name = $request->input('file');
-            $is_success = $request->input('is_success');
+            $is_success = $request->input('is_success', 0);
             $user_name = $request->input('user_name');
 
-            if ($is_success) {
+            if ($is_success == 1) {
 
                 $face_user = new FaceUser();
                 $face_user->user_name = $user_name;
@@ -225,6 +226,10 @@ class ManagerController extends Controller
     {
         $face_user = FaceUser::orderBy('id','dec')->take(2)->get();
         echo json_encode($face_user);
+    }
+
+    public function camera_create(Request $request){
+        return view('camera_create');
     }
 
 }

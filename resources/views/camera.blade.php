@@ -15,7 +15,7 @@
                     <div id="filemanager">
                         <div class="clearfix container-fluid row">
                             <div class="col-md-5">
-                                <img src="">
+                                <img src="{{\Illuminate\Support\Facades\Config::get('web.camera_link').$camera['link']}}">
                             </div>
                             <div class="col-md-7">
                                 <table class="table table-hover" id="table-camera">
@@ -46,14 +46,19 @@
                 $.get( "/admin/camera-train" ).then(function(data){
                     render_html(data);
                 }).then(function(){
-                    console.log('end');
+                    setTimeout(function(){
+                        get_history();
+                    },3000);
+
                 })
             }
             function render_html(data) {
                 var html = '';
-                data.each(function(item){
-                    console.log(item);
+                data = JSON.parse(data);
+                $.each(data, function(index,camera){
+                    html += '<tr><td>'+ camera.user_name + '</td><td>'+  camera.updated_at + '</td></tr>';
                 })
+                $('#table-camera tbody').html(html);
             }
         });
     </script>
