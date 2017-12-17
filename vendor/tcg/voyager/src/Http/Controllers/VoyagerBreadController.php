@@ -4,7 +4,9 @@ namespace TCG\Voyager\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use TCG\Voyager\Database\Schema\SchemaManager;
 use TCG\Voyager\Events\BreadDataAdded;
 use TCG\Voyager\Events\BreadDataDeleted;
@@ -408,6 +410,14 @@ class VoyagerBreadController extends Controller
                 foreach ($files as $file) {
                     $this->deleteFileIfExists($file->download_link);
                 }
+            }
+        }
+        if($dataType->getOriginal('name') === 'users'){
+            if(!empty($data->getOriginal('email'))){
+                $folder_images = Config::get('web.folder_train').'/'.$data->getOriginal('email');
+                $folder_videos = Config::get('web.folder_train_videos').'/'.$data->getOriginal('email');
+                Storage::disk('public')->deleteDirectory($folder_images);
+                Storage::disk('public')->deleteDirectory($folder_videos);
             }
         }
     }

@@ -63,6 +63,7 @@ class ManagerController extends Controller
                 $face_user->where('updated_at', '<=', $date_time_to);
             }
         }
+        $face_user->orderBy('id','dec');
         $list_file = $face_user->paginate(Config::get('web.paging'));
 
         return view('history', compact('list_file', 'list_user', 'parame'));
@@ -86,7 +87,7 @@ class ManagerController extends Controller
         $data = [];
         $page = $request->get('page', 1);
         $time = $request->get('time');
-        $list_file = UnknownFace::paginate(Config::get('web.paging'));
+        $list_file = UnknownFace::orderBy('id','dec')->paginate(Config::get('web.paging'));
         $list_user = User::all();
         return view('unknown', compact('list_file', 'list_user'));
     }
@@ -229,6 +230,27 @@ class ManagerController extends Controller
     }
 
     public function camera_create(Request $request){
+        if($request->isMethod('post')){
+
+            $name = $request->input('name');
+            if(empty($name)){
+                $message = 'Chưa nhập tên camera';
+                return Redirect::back()->with('message', $message);
+            }
+            $link_camera = $request->input('link_camera');
+            if(empty($link_camera)){
+                $message = 'Chưa nhập link camera';
+                return Redirect::back()->with('message', $message);
+            }
+
+            $camera = new ListCamera();
+            $camera->name = $name;
+            $camera->link_camera = $link_camera;
+            $camera->description = $request->input('description');
+            $camera->save();
+            $message = 'Tạo mới thành công';
+            return Redirect::route('camera')->with('message', $message);
+        }
         return view('camera_create');
     }
 

@@ -2,15 +2,20 @@
 
 @section('page_title', __('voyager.generic.media'))
 
+@section('page_header')
+    <h1 class="page-title">
+        <i class="voyager-camera"></i>
+        Danh sách Camera
+    </h1>
+    <a href="{{route('camera_create')}}" class="btn btn-success btn-add-new">
+        <i class="voyager-plus"></i> <span>Add New</span>
+    </a>
+@stop
 @section('content')
     <div class="page-content container-fluid">
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
-                <div class="admin-section-title">
-                    <h3><i class="voyager-images"></i> Danh sách Camera</h3>
-                </div>
-                <div class="clear"></div>
                 <div class="clearfix container-fluid row">
                     <div id="filemanager">
                         <div class="clearfix container-fluid row">
