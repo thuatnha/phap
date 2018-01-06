@@ -30,4 +30,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::match(['get', 'post'], '/cham-cong', ['as' => 'chamcong', 'uses' => 'ManagerController@leave']);
     Route::match(['get', 'post'], '/huan-luyen-lai', ['as' => 'retrain', 'uses' => 'ManagerController@retrain']);
     Route::get('/camera-train', ['as' => 'camera_train', 'uses' => 'ManagerController@camera_train']);
+    Route::match(['get', 'post'], '/them-ngay-phep', ['as' => 'create_leave_date', 'uses' => 'LeaveController@create_leave_date']);
+    Route::match(['get', 'post'], '/nghi-phep', ['as' => 'leave_date', 'uses' => 'LeaveController@index']);
+
 });
